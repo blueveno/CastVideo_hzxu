@@ -1,0 +1,56 @@
+package com.example.castvideo;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Map;
+
+import com.example.castvideo.NanoHTTPD.Response.Status;
+
+import android.os.Environment;
+import android.util.Log;
+
+public class HttpServer extends NanoHTTPD {
+    public HttpServer() {
+        super(8080);
+    }
+
+    @Override 
+    public Response serve(String uri, Method method,
+        Map<String, String> header, Map<String, String> parameters,
+        Map<String, String> files) {
+    String answer = "";
+
+    FileInputStream fis = null;
+    try {
+        fis = new FileInputStream(uri);
+        Log.e("httpserver", "get url:" +  uri);
+    } catch (FileNotFoundException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+    }
+    return new NanoHTTPD.Response(Status.OK, "audio/mpeg", fis);
+  }
+    /*
+    public Response serve(IHTTPSession session) {
+        Method method = session.getMethod();
+        String uri = session.getUri();
+        System.out.println(method + " '" + uri + "' ");
+
+        String msg = "<html><body><h1>Hello server</h1>\n";
+        Map<String, String> parms = session.getParms();
+        if (parms.get("username") == null)
+            msg +=
+                    "<form action='?' method='get'>\n" +
+                            "  <p>Your name: <input type='text' name='username'></p>\n" +
+                            "</form>\n";
+        else
+            msg += "<p>Hello, " + parms.get("username") + "!</p>";
+        msg += "<video id=\"sampleMovie\" width=\"640\" height=\"360\" preload controls><source src=\"/mnt/sdcard/1.mp4\"  type='video/mp4';/></video>";
+        msg += "</body></html>\n";
+        return new NanoHTTPD.Response(msg);
+    }
+    */
+
+
+}
+

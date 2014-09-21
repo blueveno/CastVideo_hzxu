@@ -1,0 +1,75 @@
+package com.example.castvideo;
+
+
+
+import android.app.Activity;
+import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
+
+public class PlayHistoryFoldAdapter extends BaseAdapter {
+
+	private LayoutInflater mInflater;
+	private Context mContext;
+	/**
+	 * Creates a new MediaAdapter for the given activity.
+	 */
+	public PlayHistoryFoldAdapter(Activity activity) {
+		mContext = activity.getApplicationContext();
+		mInflater = (LayoutInflater) activity
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	}
+	@Override
+	public int getCount() {
+		// TODO Auto-generated method stub
+		return MainActivity.mFoldName.length;
+	}
+
+	@Override
+	public String getItem(int position) {
+		// TODO Auto-generated method stub
+		return MainActivity.mFoldName[position];
+	}
+
+	@Override
+	public long getItemId(int position) {
+		// TODO Auto-generated method stub
+		return position;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		View view = convertView;
+		FoldViewHolder viewHolder;
+
+		if (view == null) {
+			view = mInflater.inflate(R.layout.item_cast_media, null);
+			viewHolder = new FoldViewHolder(view);
+			view.setTag(viewHolder);
+		} else {
+			viewHolder = (FoldViewHolder) view.getTag();
+		}
+		viewHolder.setPosition(position);
+		return view;
+        
+	}
+
+	private class FoldViewHolder {
+		TextView mFoldName;
+
+		public FoldViewHolder(View view) {
+			mFoldName = (TextView) view.findViewById(R.id.item_cast_video_title_textview);
+		}
+
+		public void setPosition(int position) {
+			Log.e("PlayHistoryFoldAdapter", String.format("set position（%d）:%s", position, MainActivity.msetting.get(position)));
+			mFoldName.setText(MainActivity.mFoldName[position]);
+		}
+	}
+	
+
+}

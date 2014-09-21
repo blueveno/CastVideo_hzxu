@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="wrap_content"
+	android:layout_height="fill_parent">
+	<CheckBox android:id="@+id/videoChexkBox"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:focusable="false" android:layout_alignParentRight="true"
+		android:visibility="gone">
+	</CheckBox>
+	<RelativeLayout android:orientation="horizontal"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:layout_toLeftOf="@id/videoChexkBox">
+		<ImageView android:id="@+id/videoImage"
+			android:layout_width="48dip" android:layout_height="48dip"
+			android:src="@drawable/sms" />
+		<TextView android:id="@+id/videoTitleText"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:textStyle="bold" android:textSize="16sp" android:gravity="center_vertical"
+		 android:singleLine="true" 
+		 android:layout_toRightOf="@id/videoImage"
+		 android:layout_marginLeft="10dip"/>
+		
+		<ImageView android:id="@+id/videoFav"
+			android:layout_width="24dip" android:layout_height="24dip"
+			android:src="@drawable/unfav"
+			android:layout_alignParentRight="true" />
+		
+		<TextView android:id="@+id/videoSizeText"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:textStyle="bold" android:textSize="16sp" android:gravity="center_vertical"
+		 android:singleLine="true" 
+		 android:layout_below="@id/videoTitleText"
+		 android:layout_toRightOf="@id/videoImage"
+		 android:layout_marginLeft="10dip"/>
+		<TextView android:id="@+id/videoDurationText"
+			android:layout_width="wrap_content" android:layout_height="fill_parent"
+			android:layout_alignBaseline="@id/videoSizeText"
+			android:singleLine="true" android:layout_alignParentRight="true" />
+	</RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,186 @@
+package com.example.castvideo;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.provider.MediaStore.Images;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+public class LocalMediaAdapter extends BaseAdapter {
+
+	private Context mContext;
+	private LayoutInflater mInflater;
+	public List<EVideo> meVideos;
+	private LoadType mloadType;
+	private update_evideoThread myThread;
+
+	/**
+	 * Creates a new MediaAdapter for the given activity.
+	 */
+	public LocalMediaAdapter(Activity activity, LoadType loadType) {
+		mContext = activity.getApplicationContext();
+		mInflater = (LayoutInflater) activity
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		meVideos = MainActivity.evideos;
+		mloadType = loadType;
+		myThread = new update_evideoThread();
+		myThread.start();
+	}
+
+
+
+
+	@Override
+	public int getCount() {
+		return meVideos.size();
+	}
+
+	@Override
+	public EVideo getItem(int position) {
+		return meVideos.get(position);
+	}
+
+	@Override
+	public long getItemId(int position) {
+		return position;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		View view = convertView;
+		CastVideoViewHolder viewHolder;
+
+		if (view == null) {
+			view = mInflater.inflate(R.layout.video_list_item, null);
+			viewHolder = new CastVideoViewHolder(view);
+			view.setTag(viewHolder);
+		} else {
+			viewHolder = (CastVideoViewHolder) view.getTag();
+		}
+		viewHolder.setPosition(position);
+		return view;
+        
+	}
+
+	private class CastVideoViewHolder {
+		ImageView mImageView;
+		TextView mTitleText, mVideoSizeText, mDurationText;
+		
+
+		public CastVideoViewHolder(View view) {			
+			mImageView = (ImageView) view.findViewById(R.id.videoImage);
+			mTitleText = (TextView) view.findViewById(R.id.videoTitleText);
+			mVideoSizeText = (TextView) view.findViewById(R.id.videoSizeText);
+			mDurationText = (TextView) view.findViewById(R.id.videoDurationText);
+		}
+
+		public void setPosition(int position) {
+			Log.e("MediaAdapter", String.format("set position（%d）:%s duration:%s", 
+					position, 
+					meVideos.get(position).getName(),
+					meVideos.get(position).getDuration()));
+			
+			
+			EVideo video = meVideos.get(position);
+
+			Bitmap bmp = null;
+			FileInputStream fis;
+			if (video.getBmp() != null) {
+				Log.e("MediaAdapter", "Get bmp from EVideo");
+				bmp = video.getBmp();
+			} else {
+				if (mloadType != null) {
+						bmp = null;//MyThumbnailUtils.createVideoThumbnail(video.getPath(),	Images.Thumbnails.MINI_KIND);
+						if (bmp == null){
+							if (video.getFormat() == 0){
+								bmp = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.video);
+							}else if (video.getFormat() == 1){
+								bmp = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.audio);
+							}else if (video.getFormat() == 2){
+								try {
+									fis = new FileInputStream(video.getPath());
+									bmp  = BitmapFactory.decodeStream(fis);
+								} catch (FileNotFoundException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								//bmp = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.photo);
+							}
+						}
+//						VideoThumbnail.getVideoThumbnail(myContext.getContentResolver(), video.getPath());
+						bmp = MyThumbnailUtils.extractThumbnail(bmp, 48, 48);
+						video.setBmp(bmp);
+				}
+			}
+			mVideoSizeText.setText(meVideos.get(position).getSize());
+			mImageView.setImageBitmap(bmp);
+			mTitleText.setText(meVideos.get(position).getTitle());
+			mDurationText.setText(meVideos.get(position).getDuration());
+			Log.e("MediaAdapter", String.format("set position %d done", position));
+		}
+	}
+	
+	
+	public void update_evideo(){
+		EVideo video;
+		Bitmap bmp = null;
+		FileInputStream fis;
+		for (int i=0; i<meVideos.size(); i++)
+		{
+			Log.e("MediaAdapter", String.format("set position（%d）:%s duration:%s", 
+					i, 
+					meVideos.get(i).getName(),
+					meVideos.get(i).getDuration()));
+			video = meVideos.get(i);
+			if (video.getBmp() == null && mloadType != null) {
+				bmp = null;//MyThumbnailUtils.createVideoThumbnail(video.getPath(), Images.Thumbnails.MINI_KIND);
+				if (bmp == null){
+
+					if (video.getFormat() == 0){
+						bmp = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.video);
+					}else if (video.getFormat() == 1){
+						bmp = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.audio);
+					}else if (video.getFormat() == 2){
+						
+						try {
+							fis = new FileInputStream(meVideos.get(i).getPath());
+							bmp  = BitmapFactory.decodeStream(fis);
+						} catch (FileNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						
+						//bmp = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.photo);
+					}
+				}
+				//						VideoThumbnail.getVideoThumbnail(myContext.getContentResolver(), video.getPath());
+				bmp = MyThumbnailUtils.extractThumbnail(bmp, 48, 48);
+				video.setBmp(bmp);
+			}
+		}
+
+	}
+	
+	private class update_evideoThread extends  Thread {
+	    @Override
+	    public void  run() {
+	    	update_evideo();
+	    }
+	}
+	
+	
+}

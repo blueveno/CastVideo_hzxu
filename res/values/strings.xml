@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<!--     <string name="app_name">f74a4e7d-35b3-4711-8152-9d73baa4c423</string> -->
+<!--     <string name="app_name">3f5c9a0f-fab1-46aa-9d73-3c960c66c745_1</string> -->
+    <string name="app_name">BFEBD3F1</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="forward_button">Forward</string>
+    <string name="back_button">Back</string>
+    <string name="mute_button">Mute</string>
+    <string name="media_route_menu_title">Play on&#8230;</string>
+
+<string name="title_name">CastVideo</string>
+
+</resources>
